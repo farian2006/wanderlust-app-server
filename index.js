@@ -21,19 +21,23 @@ export async function connectToMongoDB() {
   }
 }
 
-const mongoClient= await connectToMongoDB();
+const mongoClient = await connectToMongoDB();
 const db = mongoClient.db("wanderlast-app");
 const destinationsCollection = db.collection("destinations");
 
-
 app.post("/add-destination", async (req, res) => {
-    const data = req.body;
-    const result = await destinationsCollection.insertOne(data);
-    res.send(result);
+  const data = req.body;
+  const result = await destinationsCollection.insertOne(data);
+  res.send(result);
 });
 
 app.get("/", (req, res) => {
   res.send("Hello User! Welcome to Wanderlast App Server");
+});
+
+app.get("/destinations", async (req, res) => {
+  const destinations = await destinationsCollection.find({}).toArray();
+  res.send(destinations);
 });
 
 app.listen(PORT, () => {
