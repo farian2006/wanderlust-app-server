@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 const PORT = 5000;
 
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URI);
 
@@ -39,6 +39,12 @@ app.get("/destinations", async (req, res) => {
   const destinations = await destinationsCollection.find({}).toArray();
   res.send(destinations);
 });
+
+app.get("/destinations/:id",async(req,res)=> {
+  const {id} = req.params;
+  const result = await destinationsCollection.findOne({_id:new ObjectId(id)})
+  res.send(result);
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
